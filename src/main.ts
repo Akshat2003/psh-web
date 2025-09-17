@@ -428,8 +428,6 @@ hoverEffect.style.webkitMask = `
 hoverEffect.style.filter = 'blur(8px)'
 document.body.appendChild(hoverEffect)
 
-let mouseX = 0
-let mouseY = 0
 
 // Create button wrapper matching reference design
 const buttonWrapper = document.createElement('div')
@@ -455,7 +453,6 @@ buttonContainer.style.background = 'transparent'
 buttonContainer.style.borderRadius = '50%'
 buttonContainer.style.border = 'none'
 buttonContainer.style.backdropFilter = 'none'
-buttonContainer.style.webkitBackdropFilter = 'none'
 buttonContainer.style.boxShadow = 'none'
 buttonContainer.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease'
 
@@ -492,7 +489,6 @@ button.style.cursor = 'pointer'
 button.style.zIndex = '10'
 button.style.textShadow = '0 0 20px rgba(255, 255, 255, 0.5)'
 button.style.backdropFilter = 'none'
-button.style.webkitBackdropFilter = 'none'
 button.style.transition = 'all 0.3s ease'
 button.style.pointerEvents = 'none'
 button.style.boxShadow = 'none'
@@ -689,7 +685,7 @@ navbar.style.gap = '40px' // Space between menu items
 navbar.style.alignItems = 'center'
 
 // Create menu items
-function createMenuItem(text) {
+function createMenuItem(text: string) {
   const menuItem = document.createElement('div')
   menuItem.style.position = 'relative'
   menuItem.style.display = 'flex'
@@ -911,7 +907,7 @@ document.head.appendChild(typewriterStyle)
 const cursor = document.createElement('span')
 cursor.className = 'cursor'
 
-function typeWriter(text, callback) {
+function typeWriter(text: string, callback?: () => void) {
   if (isTyping) return
   isTyping = true
 
@@ -967,83 +963,6 @@ app.appendChild(subtitle)
 
 let time = 0
 
-function updateDynamicShadow() {
-  // Calculate gradient animation progress (8s cycle)
-  const cycle = (time * 0.01) % 8 // 0-8 seconds
-  const progress = cycle / 8 // 0-1
-
-  // Apply ease-in-out timing function to match CSS animation
-  const eased = progress < 0.5
-    ? 2 * progress * progress
-    : 1 - Math.pow(-2 * progress + 2, 2) / 2
-
-  // Calculate positions matching CSS keyframes
-  const phase = eased * 4 // 0-4 for keyframes
-  let pos1X = 0.3, pos1Y = 0.3, pos2X = 0.7, pos2Y = 0.7
-
-  if (phase <= 1) { // 0% to 25%
-    pos1X = 0.3 + (0.6 - 0.3) * phase // 30% to 60%
-    pos1Y = 0.3 + (0.2 - 0.3) * phase // 30% to 20%
-    pos2X = 0.7 + (0.4 - 0.7) * phase // 70% to 40%
-    pos2Y = 0.7 + (0.8 - 0.7) * phase // 70% to 80%
-  } else if (phase <= 2) { // 25% to 50%
-    const t = phase - 1
-    pos1X = 0.6 + (0.8 - 0.6) * t // 60% to 80%
-    pos1Y = 0.2 + (0.6 - 0.2) * t // 20% to 60%
-    pos2X = 0.4 + (0.2 - 0.4) * t // 40% to 20%
-    pos2Y = 0.8 + (0.4 - 0.8) * t // 80% to 40%
-  } else if (phase <= 3) { // 50% to 75%
-    const t = phase - 2
-    pos1X = 0.8 + (0.4 - 0.8) * t // 80% to 40%
-    pos1Y = 0.6 + (0.8 - 0.6) * t // 60% to 80%
-    pos2X = 0.2 + (0.6 - 0.2) * t // 20% to 60%
-    pos2Y = 0.4 + (0.2 - 0.4) * t // 40% to 20%
-  } else { // 75% to 100%
-    const t = phase - 3
-    pos1X = 0.4 + (0.3 - 0.4) * t // 40% to 30%
-    pos1Y = 0.8 + (0.3 - 0.8) * t // 80% to 30%
-    pos2X = 0.6 + (0.7 - 0.6) * t // 60% to 70%
-    pos2Y = 0.2 + (0.7 - 0.2) * t // 20% to 70%
-  }
-
-  // Calculate which color is more dominant at different angles
-  const shadows = []
-  for (let i = 0; i < 8; i++) {
-    const angle = (i / 8) * Math.PI * 2
-    const dirX = Math.cos(angle)
-    const dirY = Math.sin(angle)
-
-    // Sample position on the edge of the circle
-    const sampleX = 0.5 + dirX * 0.3
-    const sampleY = 0.5 + dirY * 0.3
-
-    // Calculate distance to each gradient center
-    const dist1 = Math.sqrt((sampleX - pos1X) ** 2 + (sampleY - pos1Y) ** 2)
-    const dist2 = Math.sqrt((sampleX - pos2X) ** 2 + (sampleY - pos2Y) ** 2)
-
-    // Determine dominant color based on distance and gradient strength
-    const cyan1 = Math.max(0, 1 - dist1 * 2) * 0.8
-    const orange2 = Math.max(0, 1 - dist2 * 2) * 1.0
-
-    // Create directional shadow based on dominant color
-    const shadowX = dirX * 15
-    const shadowY = dirY * 15
-
-    if (cyan1 > orange2) {
-      const intensity = cyan1 * 0.8
-      shadows.push(`${shadowX}px ${shadowY}px 30px rgba(0, 255, 220, ${intensity})`)
-    } else {
-      const intensity = orange2 * 0.9
-      shadows.push(`${shadowX}px ${shadowY}px 30px rgba(255, 120, 0, ${intensity})`)
-    }
-  }
-
-  // Add base ambient glow
-  shadows.push('0 0 60px rgba(0, 255, 220, 0.5)')
-  shadows.push('0 0 100px rgba(255, 120, 0, 0.5)')
-
-  shadowElement.style.boxShadow = shadows.join(', ')
-}
 
 function animate() {
   requestAnimationFrame(animate)
