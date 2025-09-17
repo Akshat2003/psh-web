@@ -609,11 +609,6 @@ buttonWrapper.addEventListener('click', () => {
 let isHovered = 0
 let hoverTransition = 0
 
-// Add mouse tracking for hover effect - use WebGL approach like element.txt
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX
-  mouseY = e.clientY
-})
 
 // Show hover effect when over button area - WebGL style
 buttonWrapper.addEventListener('mouseenter', () => {
