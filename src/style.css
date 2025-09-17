@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #0d0015;
+}
+
+#app {
+  width: calc(100vw - 40px);
+  height: calc(100vh - 80px);
+  margin: 20px;
+  margin-bottom: 60px;
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
